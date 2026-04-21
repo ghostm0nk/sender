@@ -1,36 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
 
 const Header = () => {
-  const [session, setSession] = useState(null);
-  const [loading, setLoading] = useState(true);
+  // Authentication-related state and effects have been removed as per request.
+  // The 'navigate' hook is kept in case it's used elsewhere in the component later,
+  // but it's not strictly necessary for the current simplified navigation.
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const getSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      setSession(session);
-      setLoading(false);
-    };
-
-    getSession();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      setLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  const handleLogout = async () => {
-    setLoading(true);
-    await supabase.auth.signOut();
-    setSession(null);
-    setLoading(false);
-    navigate('/login');
-  };
 
   return (
     <header className="bg-white shadow-md p-4 w-full">
@@ -57,34 +32,7 @@ const Header = () => {
           <Link to="/items/new" className="text-gray-700 hover:text-blue-600 transition-colors duration-200">
             Create Item
           </Link>
-          {loading ? (
-            <span className="text-gray-500">Loading...</span>
-          ) : session ? (
-            <>
-              <Link to="/dashboard" className="text-gray-700 hover:text-blue-600 transition-colors duration-200">
-                Dashboard
-              </Link>
-              <Link to="/messages" className="text-gray-700 hover:text-blue-600 transition-colors duration-200">
-                Messages
-              </Link>
-              <button
-                onClick={handleLogout}
-                className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors duration-200"
-                disabled={loading}
-              >
-                Logout
-              </button>
-            </>
-          ) : (
-            <>
-              <Link to="/login" className="text-gray-700 hover:text-blue-600 transition-colors duration-200">
-                Login
-              </Link>
-              <Link to="/register" className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200">
-                Register
-              </Link>
-            </>
-          )}
+          {/* Authentication-related links (Login, Register, Dashboard, Messages, Logout) have been removed */}
         </nav>
       </div>
     </header>
